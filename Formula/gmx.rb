@@ -1,17 +1,17 @@
 class Gmx < Formula
   desc "GameMaker eXperimental CLI"
-  homepage "https://github.com/opera-emoller/homebrew-gmx"
-  version "0.2.0"
+  homepage "https://github.com/opera-gaming/homebrew-gmx"
+  version "0.3.0"
   license "MIT OR Apache-2.0"
 
   on_macos do
     on_arm do
-      url "https://github.com/opera-emoller/homebrew-gmx/releases/download/v0.2.0/gmx-0.2.0.arm64.tar.gz"
-      sha256 "af6a381aed76e68cdb73c89f66b9ffa43e326bdf8de02b736fb147ae8b8df5fe"
+      url "https://github.com/opera-gaming/homebrew-gmx/releases/download/v0.3.0/gmx-0.3.0.arm64.tar.gz"
+      sha256 "5b233f9ba583be689f5be73002dc8486dfa818266a03ce5a93bb8cdb879dbd57"
     end
     on_intel do
-      url "https://github.com/opera-emoller/homebrew-gmx/releases/download/v0.2.0/gmx-0.2.0.x86_64.tar.gz"
-      sha256 "8135827b4e0fa0688278ecb1660ed594424a98b8e557d3ecce982f8add8b7735"
+      url "https://github.com/opera-gaming/homebrew-gmx/releases/download/v0.3.0/gmx-0.3.0.x86_64.tar.gz"
+      sha256 "b5ecf5e944df89777724c3d589791dd3ef73bf06cb0eed98579b8bddc44b4722"
     end
   end
 
