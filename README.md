@@ -13,8 +13,8 @@ Each release also publishes the GameMakerX VS Code extension as a
 `.vsix` asset. Install it with:
 
 ```
-gh release download --repo opera-gaming/homebrew-gmx --pattern 'gamemakerx-*.vsix' --clobber
-code --install-extension gamemakerx-*.vsix
+gh release download --repo opera-gaming/homebrew-gmx --pattern 'gmx-*.vsix' --clobber
+code --install-extension gmx-*.vsix
 ```
 
 Or grab a specific version directly from the
