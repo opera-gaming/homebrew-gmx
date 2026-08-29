@@ -19,7 +19,7 @@ case "$(uname -s)-$(uname -m)" in
 esac
 
 if [ -n "${GMX_VERSION:-}" ]; then
-  VERSION=$GMX_VERSION
+  VERSION=${GMX_VERSION#v}
 else
   VERSION=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
     | sed -n 's/.*"tag_name": *"v\{0,1\}\([^"]*\)".*/\1/p' | head -n1)
@@ -38,6 +38,8 @@ if curl -fsSL "$URL.sha256" -o "$TMP/$PKG.sha256" 2>/dev/null; then
   if command -v sha256sum >/dev/null; then GOT=$(sha256sum "$TMP/$PKG" | cut -d' ' -f1)
   else GOT=$(shasum -a 256 "$TMP/$PKG" | cut -d' ' -f1); fi
   [ "$WANT" = "$GOT" ] || { echo "checksum mismatch for $PKG" >&2; exit 1; }
+else
+  echo "no checksum published for $PKG; skipping verification" >&2
 fi
 
 tar -xzf "$TMP/$PKG" -C "$TMP"
