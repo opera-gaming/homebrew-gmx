@@ -10,6 +10,9 @@
 # the release workflow; the source of truth is tools/release/install.sh in gmx.
 set -eu
 REPO=opera-gaming/homebrew-gmx
+# Mirror of the newest release, reachable where api.github.com and release
+# assets are blocked (sandbox egress proxies allow raw.githubusercontent.com).
+LATEST_RAW=https://raw.githubusercontent.com/opera-gaming/gmx-releases/latest
 
 case "$(uname -s)-$(uname -m)" in
   Linux-x86_64) ASSET=x86_64-linux ;;
@@ -21,9 +24,10 @@ esac
 if [ -n "${GMX_VERSION:-}" ]; then
   VERSION=${GMX_VERSION#v}
 else
-  VERSION=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
+  VERSION=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" 2>/dev/null \
     | sed -n 's/.*"tag_name": *"v\{0,1\}\([^"]*\)".*/\1/p' | head -n1)
-  [ -n "$VERSION" ] || { echo "could not determine the latest gmx release" >&2; exit 1; }
+  [ -n "$VERSION" ] || VERSION=$(curl -fsSL "$LATEST_RAW/LATEST" 2>/dev/null | tr -d ' \n')
+  [ -n "$VERSION" ] || { echo "could not determine the latest gmx release; set GMX_VERSION=<x.y.z> and re-run" >&2; exit 1; }
 fi
 
 PKG="gmx-$VERSION.$ASSET.tar.gz"
@@ -32,7 +36,13 @@ DIR=${GMX_INSTALL_DIR:-$HOME/.local/bin}
 TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
 
 echo "downloading gmx $VERSION ($ASSET)"
-curl -fsSL "$URL" -o "$TMP/$PKG"
+if ! curl -fsSL "$URL" -o "$TMP/$PKG" 2>/dev/null; then
+  # The latest branch carries only the newest release, so this rescues
+  # blocked release-asset downloads but not older pinned GMX_VERSIONs.
+  curl -fsSL "$LATEST_RAW/$PKG" -o "$TMP/$PKG" \
+    || { echo "could not download $URL" >&2; exit 1; }
+  URL="$LATEST_RAW/$PKG"
+fi
 if curl -fsSL "$URL.sha256" -o "$TMP/$PKG.sha256" 2>/dev/null; then
   WANT=$(tr -d ' \n' < "$TMP/$PKG.sha256")
   if command -v sha256sum >/dev/null; then GOT=$(sha256sum "$TMP/$PKG" | cut -d' ' -f1)
