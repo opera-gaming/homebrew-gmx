@@ -1,13 +1,14 @@
 #!/bin/sh
 # Install the gmx CLI from its GitHub releases; no package manager needed.
 #
-#   curl -fsSL https://raw.githubusercontent.com/opera-gaming/homebrew-gmx/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/opera-gaming/gmx-releases/latest/install.sh | sh
 #
 #   GMX_VERSION      a release to install instead of the latest (e.g. 0.4.2)
 #   GMX_INSTALL_DIR  where to put the binary (default ~/.local/bin)
 #
-# Re-running it updates to the newest release. Published to the tap repo by
-# the release workflow; the source of truth is tools/release/install.sh in gmx.
+# Re-running it updates to the newest release. Published to gmx-releases and
+# the tap repo by the release workflow; the source of truth is
+# tools/release/install.sh in gmx.
 set -eu
 REPO=opera-gaming/homebrew-gmx
 # Mirror of the newest release, reachable where api.github.com and release
